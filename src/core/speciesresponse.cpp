@@ -122,6 +122,7 @@ void SpeciesResponse::calculate()
             utilizeable_radiation = 0.; // no utilizable radiation outside of vegetation period
             min_resp = 0.;
         }
+        mDailyUtilizableRad[doy] = utilizeable_radiation; // TODO: daily_timestep_check
         mUtilizableRadiation[month]+= utilizeable_radiation;
         doy++;
         //DBGMODE(

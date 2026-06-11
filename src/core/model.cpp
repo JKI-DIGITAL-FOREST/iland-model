@@ -992,6 +992,7 @@ void Model::runYear()
     om->execute("sapling"); // sapling layer per RU x species
     om->execute("saplingdetail"); // individual sapling cohorts (per RU)
     om->execute("production_month"); // 3pg responses growth per species x RU x month
+    om->execute("production_day"); // 3pg responses growth per species x RU x day TODO: daily_timestep_check
     om->execute("dynamicstand"); // output with user-defined columns (based on species x RU)
     om->execute("standdead"); // resource unit level x species
     om->execute("management"); // resource unit level x species

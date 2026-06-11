@@ -41,6 +41,7 @@ public:
     const double *soilWaterResponse() const { return mSoilWaterResponse; }
     const double *globalRadiation() const { return mRadiation; } ///< radiation sum in MJ/m2
     const double *utilizableRadiation() const {return mUtilizableRadiation; } ///< utilizable radiation (rad*responses)
+    double dailyUtilizableRadiation(int day) const { return mDailyUtilizableRad[day]; } // TODO: daily_timestep_check
     const double *vpdResponse() const {return mVpdResponse; }
     const double *co2Response() const { return mCO2Response; }
     double nitrogenResponse() const { return mNitrogenResponse; }
@@ -56,6 +57,7 @@ private:
 
     double mRadiation[12]; ///<  radiation sums per month (MJ/m2)
     double mUtilizableRadiation[12]; ///< sum of daily radiation*minResponse (MJ/m2)
+    double mDailyUtilizableRad[366]; ///< utilizable radiation per day (MJ/m2) // TODO: daily_timestep_check
     double mTempResponse[12]; ///< average of temperature response
     double mSoilWaterResponse[12]; ///< average of soilwater response
     double mVpdResponse[12]; ///< mean of vpd-response

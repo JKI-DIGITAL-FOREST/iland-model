@@ -45,6 +45,7 @@
 #include "devstageout.h"
 #include "ecovizout.h"
 #include "customaggout.h"
+#include "productionout_daily.h" // TODO: daily_timestep_check
 
 
 // on creation of the output manager
@@ -62,6 +63,7 @@ OutputManager::OutputManager()
     mOutputs.append(new DynamicStandOut);
     mOutputs.append(new CustomAggOut);
     mOutputs.append(new ProductionOut);
+    mOutputs.append(new DailyProductionOut()); // TODO: daily_timestep_check
     mOutputs.append(new StandDeadOut);
     mOutputs.append(new ManagementOut);
     mOutputs.append(new SaplingOut);

@@ -14,7 +14,7 @@
 **    GNU General Public License for more details.
 **
 **    You should have received a copy of the GNU General Public License
-**    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+**    along with this progr5am.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************************************/
 
 #ifndef PRODUCTION3PG_H
@@ -31,6 +31,7 @@ public:
     void clear(); ///< clear production values
     double rootFraction() const { return mRootFraction; } /// fraction of biomass that should be distributed to roots
     double GPPperArea() const { return mGPPperArea; } ///<  GPP production (yearly) (kg Biomass) per m2 (effective area)
+    const double *dailyGPP() const { return mDailyGPPperArea; } ///< daily GPP (kg Biomass) per m2 (effective area) TODO: daily_timestep_check
     double fEnvYear() const { return mEnvYear; } ///< f_env,yr: aggregate environmental factor [0..1}
 private:
     inline double calculateUtilizablePAR(const int month) const;
@@ -41,6 +42,7 @@ private:
     double mGPP[12]; ///< monthly Gross Primary Production [kg Biomass / m2]
     double mRootFraction; ///< fraction of production that flows into roots
     double mGPPperArea; ///< kg GPP Biomass / m2 interception area
+    double mDailyGPPperArea[366]; ///< kg GPP Biomass / m2 interception area per day // TODO: daily_timestep_check
     double mEnvYear; ///< f_env,yr: factor that aggregates the environment for the species over the year (weighted with the radiation pattern)
 
     friend class ProductionOut;

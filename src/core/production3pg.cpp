@@ -106,6 +106,14 @@ double Production3PG::calculate()
         mUPAR[i] = utilizable_rad ;
         mGPP[i] =utilizable_rad * epsilon * gC_to_kg_biomass; // ... results in GPP of the month kg Biomass/m2 (converted from gC/m2)
         year_raw_gpp += mGPP[i]; // kg Biomass/m2
+
+        // ADD: distribute monthly epsilon back to daily values
+        int days_in_month = 30 ; // TODO: add exact days per month calculation daily_timestep_check
+        // int days_in_month = climate->days(month);
+        //for (int d = climate->dayOfYear(month, 0); d < climate->dayOfYear(month, 0) + days_in_month; ++d) {
+        for (int d = i * days_in_month; d < (i+1)* days_in_month; ++d) {
+            mDailyGPPperArea[d] = mResponse->dailyUtilizableRadiation(d) * epsilon;
+        }
     }
 
     // calculate f_env,yr: see https://iland-model.org/sapling+growth+and+competition
