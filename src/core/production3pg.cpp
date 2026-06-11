@@ -82,6 +82,9 @@ void Production3PG::clear()
     for (int i=0;i<12;i++) {
         mGPP[i] = 0.; mUPAR[i]=0.;
     }
+    for (int d=0;d<366;d++) {  // TODO: daily_timestep_check
+        mDailyGPPperArea[d] = 0.;
+    }
     mEnvYear = 0.;
     mGPPperArea = 0.;
     mRootFraction = 0.;
