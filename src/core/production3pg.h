@@ -22,6 +22,7 @@
 
 class SpeciesResponse;
 class ProductionOut;
+class DailyProductionOut;
 class Production3PG
 {
 public:
@@ -46,6 +47,7 @@ private:
     double mEnvYear; ///< f_env,yr: factor that aggregates the environment for the species over the year (weighted with the radiation pattern)
 
     friend class ProductionOut;
+    friend class DailyProductionOut;
 };
 
 #endif // PRODUCTION3PG_H

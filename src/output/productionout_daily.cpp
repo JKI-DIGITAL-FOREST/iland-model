@@ -35,31 +35,31 @@ DailyProductionOut::DailyProductionOut()
               << OutputColumn::species()
               << OutputColumn("day",    "day of year (1..365/366)",  OutInteger)
               << OutputColumn("month",  "month of year (1..12)",     OutInteger)
-              << OutputColumn("tempResponse",
-                              "daily temperature response value (0..1); "
-                              "3-PG beta function of delayed mean temperature",
-                              OutDouble)
-              << OutputColumn("waterResponse",
-                              "daily soil water response value (0..1); "
-                              "linear function of soil water potential psi",
-                              OutDouble)
-              << OutputColumn("vpdResponse",
-                              "daily vapour pressure deficit response (0..1); "
-                              "exponential function of VPD [kPa]",
-                              OutDouble)
-              << OutputColumn("minResponse",
-                              "daily minimum of (tempResponse, waterResponse, vpdResponse); "
-                              "the actual limiting environmental factor (0..1). "
-                              "Zero outside the phenological growing season.",
-                              OutDouble)
-              << OutputColumn("phenology",
-                              "1 if the day is within the phenological growing season "
-                              "(leaves are present), 0 otherwise",
-                              OutInteger)
-              << OutputColumn("radiation_m2",
-                              "daily incoming photosynthetically active radiation (PAR) "
-                              "in MJ per m2",
-                              OutDouble)
+            //   << OutputColumn("tempResponse",
+            //                   "daily temperature response value (0..1); "
+            //                   "3-PG beta function of delayed mean temperature",
+            //                   OutDouble)
+            //   << OutputColumn("waterResponse",
+            //                   "daily soil water response value (0..1); "
+            //                   "linear function of soil water potential psi",
+            //                   OutDouble)
+            //   << OutputColumn("vpdResponse",
+            //                   "daily vapour pressure deficit response (0..1); "
+            //                   "exponential function of VPD [kPa]",
+            //                   OutDouble)
+            //   << OutputColumn("minResponse",
+            //                   "daily minimum of (tempResponse, waterResponse, vpdResponse); "
+            //                   "the actual limiting environmental factor (0..1). "
+            //                   "Zero outside the phenological growing season.",
+            //                   OutDouble)
+            //   << OutputColumn("phenology",
+            //                   "1 if the day is within the phenological growing season "
+            //                   "(leaves are present), 0 otherwise",
+            //                   OutInteger)
+            //   << OutputColumn("radiation_m2",
+            //                   "daily incoming photosynthetically active radiation (PAR) "
+            //                   "in MJ per m2",
+            //                   OutDouble)
               << OutputColumn("utilizableRadiation_m2",
                               "daily utilizable PAR in MJ per m2 "
                               "(= radiation * minResponse; zero outside phenology). "
@@ -87,8 +87,8 @@ void DailyProductionOut::execute(const ResourceUnitSpecies *rus)
     //const SpeciesResponse  *resp = prod.mResponse;   // friend access, same as ProductionOut
 
     // skip species / resource units that had no production this year
-    // if (prod.mEnvYear == 0.)
-    //     return;
+    if (prod.mEnvYear == 0.)
+        return;
 
     const Climate    *climate  = rus->ru()->climate();
     const ClimateDay *day      = climate->begin();
