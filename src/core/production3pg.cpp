@@ -17,9 +17,9 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************************************/
 
+#include "climate.h"
 #include "global.h"
 #include "production3pg.h"
-
 #include "resourceunit.h"
 #include "species.h"
 #include "speciesresponse.h"
@@ -101,6 +101,7 @@ double Production3PG::calculate()
     double year_raw_gpp = 0.;
     clear();
     double utilizable_rad, epsilon;
+    int current_day = 0; // current day of the year
     // conversion from gC to kg Biomass: C/Biomass=0.5
     const double gC_to_kg_biomass = 1. / (biomassCFraction * 1000.);
     for (int i=0;i<12;i++) {
@@ -111,11 +112,18 @@ double Production3PG::calculate()
         year_raw_gpp += mGPP[i]; // kg Biomass/m2
 
         // ADD: distribute monthly epsilon back to daily values
-        int days_in_month = 30 ; // TODO: add exact days per month calculation daily_timestep_check
-        // int days_in_month = climate->days(month);
-        //for (int d = climate->dayOfYear(month, 0); d < climate->dayOfYear(month, 0) + days_in_month; ++d) {
-        for (int d = i * days_in_month; d < (i+1)* days_in_month; ++d) {
-            mDailyGPPperArea[d] = mResponse->dailyUtilizableRadiation(d) * epsilon;
+        int days_in_month = mRu->climate()->days(i); // TODO: add exact days per month calculation daily_timestep_check
+        double daily_sum_check = 0.;   // for verification (can be removed later)
+        //for (int d = i * days_in_month; d < (i+1)* days_in_month; ++d) {
+        for (int d = current_day; d < current_day + days_in_month; ++d) {
+            // calculate daily GPP
+            mDailyGPPperArea[d] = mResponse->dailyUtilizableRadiation(d) * epsilon * gC_to_kg_biomass;
+            daily_sum_check += mDailyGPPperArea[d];
+        }
+        current_day += days_in_month; // increment current_day by days of current month to get correct starting day of the next month
+        if (logLevelDebug() && daily_sum_check == mGPP[i]) { // warning if sum of daily GPP is not equal to monthly GPP
+            qDebug() << "WARNING: sum(mDailyGPPperArea) != mGPP for month " << i << ": sum(mDailyGPPperArea) = "
+                     << daily_sum_check << ": mGPP = " << mGPP[i];
         }
     }
 

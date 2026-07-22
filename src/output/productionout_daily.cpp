@@ -18,6 +18,7 @@
 #include "speciesresponse.h"
 #include "production3pg.h"
 #include "climate.h"
+#include "watercycle.h"
 
 DailyProductionOut::DailyProductionOut()
 {
@@ -70,6 +71,23 @@ DailyProductionOut::DailyProductionOut()
                               "(= utilizableRadiation * epsilon_month, before aging "
                               "and individual tree allocation). "
                               "epsilon includes f_nitrogen and f_CO2 modifiers.",
+                              OutDouble)
+              << OutputColumn("LAI_species_m2_m2",
+                              "leaf area index of the species on this resource unit "
+                              "(m2 leaf area / m2 ground area; trees >4m).",
+                              OutDouble)
+              << OutputColumn("AET_ru_mm",
+                              "daily actual evapotranspiration of the resource unit in mm "
+                              "(transpiration + canopy evaporation). Same value is repeated "
+                              "for all species rows of a resource unit and day.",
+                              OutDouble)
+              << OutputColumn("SWC_ru_mm",
+                              "daily soil water content of the resource unit in mm. "
+                              "Same value is repeated for all species rows of a resource unit and day.",
+                              OutDouble)
+              << OutputColumn("PWP_ru_mm",
+                              "daily permanent wilting point of the resource unit in mm. "
+                              "Same value is repeated for all species rows of a resource unit and day.",
                               OutDouble);
 }
 
@@ -91,6 +109,7 @@ void DailyProductionOut::execute(const ResourceUnitSpecies *rus)
         return;
 
     const Climate    *climate  = rus->ru()->climate();
+    const WaterCycle *water    = rus->ru()->waterCycle();
     const ClimateDay *day      = climate->begin();
     const int         n_days   = climate->daysOfYear();
 
@@ -119,7 +138,11 @@ void DailyProductionOut::execute(const ResourceUnitSpecies *rus)
             //   << (daily_pheno[doy] ? 1 : 0)
               << day->radiation        // raw daily PAR directly from climate
             //  << daily_urad[doy]
-              << daily_gpp[doy];
+            << daily_gpp[doy]
+            << rus->leafAreaIndex()
+            << water->dailyEvapotranspiration(doy)
+            << water->dailyWaterContent(doy)
+            << water->dailyPWP(doy);
         writeRow();
     }
 }

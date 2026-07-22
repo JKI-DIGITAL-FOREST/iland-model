@@ -21,13 +21,14 @@
 #define PRODUCTION3PG_H
 
 class SpeciesResponse;
+class ResourceUnit;
 class ProductionOut;
 class DailyProductionOut;
 class Production3PG
 {
 public:
     Production3PG();
-    void setResponse(const SpeciesResponse *response) { mResponse=response;}
+    void setResponse(const SpeciesResponse *response, const ResourceUnit *ru) { mResponse=response; mRu=ru;}
     double calculate(); ///< return  year GPP/rad: kg Biomass/MJ PAR/m2
     void clear(); ///< clear production values
     double rootFraction() const { return mRootFraction; } /// fraction of biomass that should be distributed to roots
@@ -39,6 +40,7 @@ private:
     inline double calculateEpsilon(const int month) const;
     inline double abovegroundFraction() const; ///< calculate fraction of biomass
     const SpeciesResponse *mResponse; ///< species specific responses
+    const ResourceUnit *mRu;
     double mUPAR[12]; ///< utilizable radiation MJ/m2 and month
     double mGPP[12]; ///< monthly Gross Primary Production [kg Biomass / m2]
     double mRootFraction; ///< fraction of production that flows into roots

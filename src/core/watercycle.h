@@ -117,6 +117,9 @@ public:
     /// water holding capacity in mm between suction of (default) -15kpa to -4000 kpa (permanent wilting point)
     double waterHoldingCapacity() const { return mFieldCapacity - mPermanentWiltingPoint; }
     const double &psi_kPa(const int doy) const { return mPsi[doy]; } ///< soil water potential for the day 'doy' (0-index) in kPa
+    double dailyEvapotranspiration(const int doy) const { return mDailyET[doy]; } ///< daily actual evapotranspiration (mm), incl. transpiration and canopy evaporation
+    double dailyWaterContent(const int doy) const { return mDailyWaterContent[doy]; } ///< daily water content (mm) of the soil
+    double dailyPWP(const int doy) const { return mDailyPWP[doy]; } ///< daily permanent wilting point (mm) of the soil
     double soilDepth() const { return mSoilDepth; } ///< soil depth in mm
     double currentContent() const { return mContent; } ///< current water content in mm
     double currentSnowPack() const { return mSnowPack.snowPack(); } ///< current water stored as snow (mm water)
@@ -161,6 +164,11 @@ private:
     double mFieldCapacity; ///< bucket height of field-capacity (eq. -15kPa) (mm)
     double mPermanentWiltingPoint; ///< bucket "height" of PWP (is fixed to -4MPa) (mm)
     double mPsi[366]; ///< soil water potential for each day in kPa
+    // daily values
+    double mDailyWaterContent[366]; ///< daily water content (mm) of the soil
+    double mDailyET[366]; ///< daily actual evapotranspiration (mm), incl. transpiration and canopy evaporation
+    // dummy value: daily permanent wilting point (mm) (fixed to -4MPa)
+    double mDailyPWP[366]; ///< daily permanent wilting point (mm) (fixed to -4MPa)
     void getStandValues(RUSpeciesShares &species_shares); ///< helper function to retrieve LAI per species group
     inline double calculateSoilAtmosphereResponse(RUSpeciesShares &species_share, const double psi_kpa, const double vpd_kpa);
     double mLAINeedle;

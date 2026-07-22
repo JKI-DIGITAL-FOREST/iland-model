@@ -49,7 +49,7 @@ void ResourceUnitSpecies::setup(Species *species, ResourceUnit *ru)
     mSpecies = species;
     mRU = ru;
     mResponse.setup(this);
-    m3PG.setResponse(&mResponse);
+    m3PG.setResponse(&mResponse, mRU);
     if (GlobalSettings::instance()->model()->settings().regenerationEnabled)
         mEstablishment.setup(ru->climate(), this);
     mStatistics.setResourceUnitSpecies(this);

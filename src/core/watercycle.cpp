@@ -54,8 +54,12 @@ WaterCycle::WaterCycle()
 {
     mSoilDepth = 0;
     mLastYear = -1;
-    for (int i=0;i<366;++i)
+    for (int i=0;i<366;++i) {
         mPsi[i] = 0.;
+        mDailyET[i] = 0.;
+        mDailyWaterContent[i] = 0.;
+        mDailyPWP[i] = 0.;
+    }
     mEstPsi.clear();
     mPermafrost = nullptr;
 }
@@ -305,7 +309,7 @@ void WaterCycle::run()
         mPermafrost->newYear();
 
     // main loop over all days of the year
-    double prec_mm, prec_after_interception, prec_to_soil, et, excess;
+    double prec_mm, prec_after_interception, prec_to_soil, et, etc, excess;
     const Climate *climate = mRU->climate();
     const ClimateDay *day = climate->begin();
     const ClimateDay *end = climate->end();
@@ -364,6 +368,7 @@ void WaterCycle::run()
 
         
         // do not remove water below the PWP (fixed value)
+        // etc = et;
         if (mContent<mPermanentWiltingPoint) {
             et -= mPermanentWiltingPoint - mContent; // reduce et (for bookkeeping)
             mContent = mPermanentWiltingPoint;
@@ -375,6 +380,9 @@ void WaterCycle::run()
 
 
         mTotalET += et;
+        mDailyET[doy] = et;
+        mDailyWaterContent[doy] = mContent;
+        mDailyPWP[doy] = mPermanentWiltingPoint;
         if (day->month>3 && day->month<10) {
             mMeanGrowingSeasonSWC += mContent;
             growing_season_days++;
