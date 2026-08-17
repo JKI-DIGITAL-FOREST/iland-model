@@ -46,6 +46,7 @@
 #include "ecovizout.h"
 #include "customaggout.h"
 #include "productionout_daily.h" // TODO: daily_timestep_check
+#include "waterout_daily.h" // TODO: daily_timestep_check
 
 
 // on creation of the output manager
@@ -72,6 +73,7 @@ OutputManager::OutputManager()
     mOutputs.append(new CarbonFlowOut);
     mOutputs.append(new SoilInputOut);
     mOutputs.append(new WaterOut);
+    mOutputs.append(new DailyWaterOut()); // TODO: daily_timestep_check
     mOutputs.append(new SVDGPPOut);
     mOutputs.append(new SVDStateOut);
     mOutputs.append(new SVDIndicatorOut);

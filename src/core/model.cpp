@@ -1000,6 +1000,7 @@ void Model::runYear()
     om->execute("carbonflow"); // resource unit level, GPP, NPP and total carbon flows (atmosphere, harvest, ...)
     om->execute("soilinput"); // resource unit level carbon input to the soil
     om->execute("water"); // resource unit/landscape level water output (ET, rad, snow cover, ...)
+    om->execute("water_day"); // resource unit/landscape level daily water output (ET, wc, LAI ...)
     om->execute("svdgpp"); // pot. gpp per m2 and for a number of species (SVD related)
     om->execute("svdstate"); // forest state information (SVD related)
     om->execute("svdindicator"); // forest indicators on RU level (SVD related)

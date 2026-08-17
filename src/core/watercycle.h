@@ -120,11 +120,16 @@ public:
     double dailyEvapotranspiration(const int doy) const { return mDailyET[doy]; } ///< daily actual evapotranspiration (mm), incl. transpiration and canopy evaporation
     double dailyWaterContent(const int doy) const { return mDailyWaterContent[doy]; } ///< daily water content (mm) of the soil
     double dailyPWP(const int doy) const { return mDailyPWP[doy]; } ///< daily permanent wilting point (mm) of the soil
+    double dailyEffectiveLAI(const int doy) const { return mDailyLAIEffective[doy]; } ///< daily effective LAI (m2/m2), phenology-aware
+    double dailyBroadleafLAI(const int doy) const { return mDailyLAIBroadleaved[doy]; } ///< daily broadleaf LAI (m2/m2), phenology-aware
+    double dailyConiferousLAI(const int doy) const { return mDailyLAINeedle[doy]; } ///< daily coniferous LAI (m2/m2), phenology-aware
     double soilDepth() const { return mSoilDepth; } ///< soil depth in mm
     double currentContent() const { return mContent; } ///< current water content in mm
     double currentSnowPack() const { return mSnowPack.snowPack(); } ///< current water stored as snow (mm water)
     double canopyConductance() const { return mCanopyConductance; } ///< current canopy conductance (LAI weighted CC of available tree species) (m/s)
     double effectiveLAI() const { return mEffectiveLAI; } ///< effective LAI (including saplings and ground vegetation)
+    double broadleafLAI() const { return mLAIBroadleaved; } ///< LAI of broadleaved species
+    double coniferousLAI() const { return mLAINeedle; } ///< LAI of coniferous species
     double meanSoilWaterContent() const {return mMeanSoilWaterContent; } ///< mean of annual soil water content (mm)
     double meanGrowingSeasonSWC() const { return mMeanGrowingSeasonSWC; } ///< mean soil water content (mm) during the growing season (fixed: april - september)
     /// monthly values for PET (mm sum)
@@ -147,6 +152,7 @@ private:
     /// calculate the psi min over the vegetation period for all
     /// phenology types for the current resource unit (and store in a container)
     void calculatePsiMin() const;
+    void calculateDailyLAI(const int doy);
 
     int mLastYear; ///< last year of execution
     inline double psiFromHeight(const double mm) const; // kPa for water height "mm"
@@ -167,6 +173,9 @@ private:
     // daily values
     double mDailyWaterContent[366]; ///< daily water content (mm) of the soil
     double mDailyET[366]; ///< daily actual evapotranspiration (mm), incl. transpiration and canopy evaporation
+    double mDailyLAIEffective[366]; ///< daily effective LAI (m2/m2), phenology-aware
+    double mDailyLAIBroadleaved[366]; ///< daily broadleaf LAI (m2/m2), phenology-aware
+    double mDailyLAINeedle[366]; ///< daily coniferous LAI (m2/m2), phenology-aware
     // dummy value: daily permanent wilting point (mm) (fixed to -4MPa)
     double mDailyPWP[366]; ///< daily permanent wilting point (mm) (fixed to -4MPa)
     void getStandValues(RUSpeciesShares &species_shares); ///< helper function to retrieve LAI per species group

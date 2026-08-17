@@ -58,6 +58,9 @@ WaterCycle::WaterCycle()
         mPsi[i] = 0.;
         mDailyET[i] = 0.;
         mDailyWaterContent[i] = 0.;
+        mDailyLAIEffective[i] = 0.;
+        mDailyLAIBroadleaved[i] = 0.;
+        mDailyLAINeedle[i] = 0.;
         mDailyPWP[i] = 0.;
     }
     mEstPsi.clear();
@@ -286,6 +289,37 @@ inline double WaterCycle::calculateSoilAtmosphereResponse(RUSpeciesShares &speci
     return total_response;
 }
 
+void WaterCycle::calculateDailyLAI(const int doy)
+{
+    // Deciduous species contribute only within their vegetation period.
+    double lai_needle_day = 0.;
+    double lai_broad_day = 0.;
+
+    foreach (const ResourceUnitSpecies *rus, mRU->ruSpecies()) {
+        double lai_day = rus->leafAreaIndex() + rus->leafAreaIndexSaplings();
+        if (lai_day <= 0.)
+            continue;
+
+        const Species *sp = rus->species();
+        bool active = true;
+        if (!sp->isEvergreen()) {
+            const Phenology &pheno = mRU->climate()->phenology(sp->phenologyClass());
+            active = (doy >= pheno.vegetationPeriodStart() && doy <= pheno.vegetationPeriodEnd());
+        }
+        if (!active)
+            continue;
+
+        if (sp->isConiferous())
+            lai_needle_day += lai_day;
+        else
+            lai_broad_day += lai_day;
+    }
+
+    mDailyLAIBroadleaved[doy] = lai_broad_day;
+    mDailyLAINeedle[doy] = lai_needle_day;
+    mDailyLAIEffective[doy] = qMax(lai_broad_day + lai_needle_day, mGroundVegetationLAI);
+}
+
 
 /// Main Water Cycle function. This function triggers all water related tasks for
 /// one simulation year.
@@ -321,6 +355,8 @@ void WaterCycle::run()
     int growing_season_days = 0;
     mMeanGrowingSeasonSWC = mMeanSoilWaterContent = 0.;
     for (; day<end; ++day, ++doy) {
+        calculateDailyLAI(doy);
+
         // (1) precipitation of the day
         prec_mm = day->preciptitation;
         // (2) interception by the crown
