@@ -91,6 +91,10 @@ linux-g++ {
 # basically sudo apt-get install libfreeimage3 libfreeimage-dev
 
 LIBS += -lfreeimage
+} else:macx {
+INCLUDEPATH += /opt/homebrew/include /usr/local/include
+LIBS += -L/opt/homebrew/lib -L/usr/local/lib -lfreeimage
+#LIBS += -L/opt/homebrew/Cellar/freeimage/3.18.0/lib -lfreeimage
 } else {
 # external freeimage library (geotiff)
 LIBS += -L$$THIRDPARTY_PATH/FreeImage -lFreeImage
@@ -182,6 +186,8 @@ SOURCES += main.cpp \
     ../core/phenology.cpp \
     ../tools/floatingaverage.cpp \
     ../output/productionout.cpp \
+    ../output/productionout_daily.cpp \
+    ../output/waterout_daily.cpp \
     ../core/watercycle.cpp \
     ../tools/climateconverter.cpp \
     ../tools/csvfile.cpp \
@@ -313,6 +319,8 @@ HEADERS += \
     ../core/phenology.h \
     ../tools/floatingaverage.h \
     ../output/productionout.h \
+    ../output/productionout_daily.h \
+    ../output/waterout_daily.h \
     ../core/watercycle.h \
     ../tools/climateconverter.h \
     ../tools/csvfile.h \
